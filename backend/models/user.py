@@ -1,11 +1,10 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Float, Text, Enum, ForeignKey, Date
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Float, Text, Enum, Date
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+from sqlalchemy import ForeignKey
 from backend.core.database import Base
 import enum
 
-
-# ─── Enums ────────────────────────────────────────────────────────────────────
 
 class RoleEnum(str, enum.Enum):
     admin = "admin"
@@ -39,8 +38,6 @@ class StatusEtapaEnum(str, enum.Enum):
     nao_aplicavel = "N/A"
 
 
-# ─── User ─────────────────────────────────────────────────────────────────────
-
 class User(Base):
     __tablename__ = "pd_users"
 
@@ -55,54 +52,34 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    projetos_gerenciados = relationship("Projeto", back_populates="gestor", foreign_keys="Projeto.gestor_id")
-
-
-# ─── Projeto ──────────────────────────────────────────────────────────────────
 
 class Projeto(Base):
     __tablename__ = "projetos"
 
     id = Column(Integer, primary_key=True, index=True)
-    numero = Column(String(20), nullable=True, index=True)          # ex: 31763
-
-    # Identificação
+    numero = Column(String(20), nullable=True, index=True)
     cliente = Column(String(150), nullable=False)
     marca = Column(String(150), nullable=True)
     produto = Column(String(150), nullable=False)
-    tipo_embalagem = Column(String(50), nullable=True)               # Sachê, Cartucho
+    tipo_embalagem = Column(String(50), nullable=True)
     gramatura = Column(String(100), nullable=True)
-    formulacao = Column(String(100), nullable=True)                  # PHX-Q700, etc.
-
-    # Classificação
+    formulacao = Column(String(100), nullable=True)
     tipo_contrato = Column(Enum(TipoContratoEnum), nullable=False, default=TipoContratoEnum.full_service)
     tipo_projeto = Column(Enum(TipoProjetoEnum), nullable=False, default=TipoProjetoEnum.novo_produto)
     status = Column(Enum(StatusProjetoEnum), nullable=False, default=StatusProjetoEnum.nao_iniciado)
-
-    # Gestão
-    gestor_id = Column(Integer, ForeignKey("pd_users.id"), nullable=True)
-    gestao_externa = Column(String(150), nullable=True)              # "Amicci / Phoenix Brands", etc.
+    gestor_id = Column(Integer, nullable=True)
+    gestao_externa = Column(String(150), nullable=True)
     previsao_conclusao = Column(Date, nullable=True)
-
-    # Etapa atual e progresso
     etapa_atual = Column(String(100), nullable=True)
-    progresso = Column(Float, default=0.0)                           # 0.0 a 1.0
-
-    # Textos
+    progresso = Column(Float, default=0.0)
     proxima_acao = Column(Text, nullable=True)
     observacoes = Column(Text, nullable=True)
-
-    # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
-    # Relacionamentos
-    gestor = relationship("User", back_populates="projetos_gerenciados", foreign_keys=[gestor_id])
     etapas = relationship("EtapaProjeto", back_populates="projeto", cascade="all, delete-orphan", order_by="EtapaProjeto.ordem")
     historico = relationship("HistoricoEtapa", back_populates="projeto", cascade="all, delete-orphan")
 
-
-# ─── Etapa do Projeto ─────────────────────────────────────────────────────────
 
 class EtapaProjeto(Base):
     __tablename__ = "etapas_projeto"
@@ -113,15 +90,11 @@ class EtapaProjeto(Base):
     ordem = Column(Integer, nullable=False)
     status = Column(Enum(StatusEtapaEnum), default=StatusEtapaEnum.nao_iniciado, nullable=False)
     data_conclusao = Column(Date, nullable=True)
-    responsavel_id = Column(Integer, ForeignKey("pd_users.id"), nullable=True)
+    responsavel_id = Column(Integer, nullable=True)
     observacoes = Column(Text, nullable=True)
 
-    # Relacionamentos
     projeto = relationship("Projeto", back_populates="etapas")
-    responsavel = relationship("User", foreign_keys=[responsavel_id])
 
-
-# ─── Histórico de Etapas ──────────────────────────────────────────────────────
 
 class HistoricoEtapa(Base):
     __tablename__ = "historico_etapas"
@@ -131,9 +104,8 @@ class HistoricoEtapa(Base):
     etapa_nome = Column(String(100), nullable=False)
     status_anterior = Column(String(50), nullable=True)
     status_novo = Column(String(50), nullable=False)
-    usuario_id = Column(Integer, ForeignKey("pd_users.id"), nullable=True)
+    usuario_id = Column(Integer, nullable=True)
     observacao = Column(Text, nullable=True)
     data = Column(DateTime(timezone=True), server_default=func.now())
 
     projeto = relationship("Projeto", back_populates="historico")
-    usuario = relationship("User", foreign_keys=[usuario_id])
