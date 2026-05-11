@@ -35,13 +35,12 @@ def criar_etapas(db, projeto_id, etapas_concluidas=None):
 def calcular_progresso_seed(etapas_concluidas):
     return round(len(etapas_concluidas) / len(ETAPAS_PADRAO), 2)
 
-def get_or_create_user(db, email, nome, senha, role, cargo):
-    u = db.query(User).filter(User.email == email).first()
-    if not u:
-        u = User(nome=nome, email=email, hashed_password=get_password_hash(senha),
-                 role=role, cargo=cargo, is_active=True)
-        db.add(u)
-        db.flush()
+def criar_usuario(db, email, nome, senha, role, cargo):
+    u = User(nome=nome, email=email, hashed_password=get_password_hash(senha),
+             role=role, cargo=cargo, is_active=True)
+    db.add(u)
+    db.flush()
+    db.refresh(u)
     return u
 
 @asynccontextmanager
@@ -59,9 +58,9 @@ async def lifespan(app: FastAPI):
             print("Seed resetado!")
 
         if db.query(Projeto).count() == 0:
-            admin = get_or_create_user(db, "admin@pd.com", "Administrador", "admin123", RoleEnum.admin, "Administrador do Sistema")
-            willian = get_or_create_user(db, "willian@qualimpel.com", "Willian Gadelha", "qualimpel123", RoleEnum.gestor, "Gestor de P&D")
-            marcos = get_or_create_user(db, "marcos@qualimpel.com", "Marcos Wichoski", "qualimpel123", RoleEnum.gestor, "Gestor de Projetos")
+            admin = criar_usuario(db, "admin@pd.com", "Administrador", "admin123", RoleEnum.admin, "Administrador do Sistema")
+            willian = criar_usuario(db, "willian@qualimpel.com", "Willian Gadelha", "qualimpel123", RoleEnum.gestor, "Gestor de P&D")
+            marcos = criar_usuario(db, "marcos@qualimpel.com", "Marcos Wichoski", "qualimpel123", RoleEnum.gestor, "Gestor de Projetos")
 
             conc_abc_lv = ["Sinal","Negociação","Formalização","Amostra","Embalagem EAN / DUN","Embalagem - Ficha Técnica","Embalagem - Planta Técnica","Embalagem - Dizeres de Rotulagem","Embalagem - Rotas Criativas","Embalagem - Planificação"]
             p1 = Projeto(cliente="Rede ABC", marca="ABC", produto="Lava Roupas", tipo_embalagem="Sachê", gramatura="1,6KG / 4KG", formulacao="PHX-Q450", tipo_contrato=TipoContratoEnum.full_service, tipo_projeto=TipoProjetoEnum.novo_produto, status=StatusProjetoEnum.em_andamento, gestor_id=willian.id, etapa_atual="Clicheria", progresso=calcular_progresso_seed(conc_abc_lv))
