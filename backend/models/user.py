@@ -42,7 +42,7 @@ class StatusEtapaEnum(str, enum.Enum):
 # ─── User ─────────────────────────────────────────────────────────────────────
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "pd_users"
 
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String(150), nullable=False)
@@ -80,7 +80,7 @@ class Projeto(Base):
     status = Column(Enum(StatusProjetoEnum), nullable=False, default=StatusProjetoEnum.nao_iniciado)
 
     # Gestão
-    gestor_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    gestor_id = Column(Integer, ForeignKey("pd_users.id"), nullable=True)
     gestao_externa = Column(String(150), nullable=True)              # "Amicci / Phoenix Brands", etc.
     previsao_conclusao = Column(Date, nullable=True)
 
@@ -113,7 +113,7 @@ class EtapaProjeto(Base):
     ordem = Column(Integer, nullable=False)
     status = Column(Enum(StatusEtapaEnum), default=StatusEtapaEnum.nao_iniciado, nullable=False)
     data_conclusao = Column(Date, nullable=True)
-    responsavel_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    responsavel_id = Column(Integer, ForeignKey("pd_users.id"), nullable=True)
     observacoes = Column(Text, nullable=True)
 
     # Relacionamentos
@@ -131,7 +131,7 @@ class HistoricoEtapa(Base):
     etapa_nome = Column(String(100), nullable=False)
     status_anterior = Column(String(50), nullable=True)
     status_novo = Column(String(50), nullable=False)
-    usuario_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    usuario_id = Column(Integer, ForeignKey("pd_users.id"), nullable=True)
     observacao = Column(Text, nullable=True)
     data = Column(DateTime(timezone=True), server_default=func.now())
 
