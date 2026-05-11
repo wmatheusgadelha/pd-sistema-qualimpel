@@ -63,11 +63,11 @@ async def lifespan(app: FastAPI):
             marcos = criar_usuario(db, "marcos@qualimpel.com", "Marcos Wichoski", "qualimpel123", RoleEnum.gestor, "Gestor de Projetos")
 
             conc_abc_lv = ["Sinal","Negociação","Formalização","Amostra","Embalagem EAN / DUN","Embalagem - Ficha Técnica","Embalagem - Planta Técnica","Embalagem - Dizeres de Rotulagem","Embalagem - Rotas Criativas","Embalagem - Planificação"]
-            p1 = Projeto(cliente="Rede ABC", marca="ABC", produto="Lava Roupas", tipo_embalagem="Sachê", gramatura="1,6KG / 4KG", formulacao="PHX-Q450", tipo_contrato=TipoContratoEnum.full_service, tipo_projeto=TipoProjetoEnum.novo_produto, status=StatusProjetoEnum.em_andamento, gestor_id=willian.id, etapa_atual="Clicheria", progresso=calcular_progresso_seed(conc_abc_lv))
+            p1 = Projeto(cliente="Rede ABC", marca="ABC", produto="Lava Roupas", tipo_embalagem="Sachê", gramatura="1,6KG / 4KG", formulacao="PHX-Q450", tipo_contrato=TipoContratoEnum.full_service, tipo_projeto=TipoProjetoEnum.novo_produto, status=StatusProjetoEnum.em_andamento, etapa_atual="Clicheria", progresso=calcular_progresso_seed(conc_abc_lv))
             db.add(p1); db.flush(); criar_etapas(db, p1.id, conc_abc_lv)
 
             conc_abc_coco = ["Sinal","Negociação","Formalização","Amostra","Embalagem EAN / DUN","Embalagem - Ficha Técnica","Embalagem - Planta Técnica"]
-            p2 = Projeto(cliente="Rede ABC", marca="ABC", produto="Lava Roupas Coco", tipo_embalagem="Sachê", gramatura="1KG", formulacao="PHX-Q450", tipo_contrato=TipoContratoEnum.full_service, tipo_projeto=TipoProjetoEnum.novo_produto, status=StatusProjetoEnum.em_andamento, gestor_id=willian.id, etapa_atual="Embalagem - Dizeres de Rotulagem", progresso=calcular_progresso_seed(conc_abc_coco))
+            p2 = Projeto(cliente="Rede ABC", marca="ABC", produto="Lava Roupas Coco", tipo_embalagem="Sachê", gramatura="1KG", formulacao="PHX-Q450", tipo_contrato=TipoContratoEnum.full_service, tipo_projeto=TipoProjetoEnum.novo_produto, status=StatusProjetoEnum.em_andamento, etapa_atual="Embalagem - Dizeres de Rotulagem", progresso=calcular_progresso_seed(conc_abc_coco))
             db.add(p2); db.flush(); criar_etapas(db, p2.id, conc_abc_coco)
 
             conc_clara = ["Sinal","Negociação","Formalização","Amostra","Embalagem EAN / DUN","Embalagem - Ficha Técnica","Embalagem - Planta Técnica","Embalagem - Dizeres de Rotulagem","Embalagem - Rotas Criativas"]
@@ -82,10 +82,10 @@ async def lifespan(app: FastAPI):
             p5 = Projeto(cliente="Assaí", produto="Lava Roupas", tipo_embalagem="Sachê", gramatura="2,4KG / 4KG", formulacao="PHX-Q700", tipo_contrato=TipoContratoEnum.full_service, tipo_projeto=TipoProjetoEnum.novo_produto, status=StatusProjetoEnum.em_andamento, gestao_externa="Virtuss Branding", etapa_atual="Embalagem EAN / DUN", progresso=calcular_progresso_seed(conc_assai))
             db.add(p5); db.flush(); criar_etapas(db, p5.id, conc_assai)
 
-            p6 = Projeto(cliente="Ypê", marca="Ypê", produto="Lava Roupas", tipo_embalagem="Sachê", tipo_contrato=TipoContratoEnum.servico, tipo_projeto=TipoProjetoEnum.novo_produto, status=StatusProjetoEnum.em_andamento, gestor_id=willian.id, etapa_atual="Negociação", progresso=0.0)
+            p6 = Projeto(cliente="Ypê", marca="Ypê", produto="Lava Roupas", tipo_embalagem="Sachê", tipo_contrato=TipoContratoEnum.servico, tipo_projeto=TipoProjetoEnum.novo_produto, status=StatusProjetoEnum.em_andamento, etapa_atual="Negociação", progresso=0.0)
             db.add(p6); db.flush(); criar_etapas(db, p6.id, ["Sinal"])
 
-            p7 = Projeto(cliente="Maxi Compras", marca="Maxi Casa", produto="Lava Roupas", tipo_embalagem="Sachê", gramatura="800G / 1,6KG / 2,4KG / 4KG", tipo_contrato=TipoContratoEnum.full_service, tipo_projeto=TipoProjetoEnum.novo_produto, status=StatusProjetoEnum.em_andamento, gestor_id=willian.id, etapa_atual="Formalização", progresso=0.08)
+            p7 = Projeto(cliente="Maxi Compras", marca="Maxi Casa", produto="Lava Roupas", tipo_embalagem="Sachê", gramatura="800G / 1,6KG / 2,4KG / 4KG", tipo_contrato=TipoContratoEnum.full_service, tipo_projeto=TipoProjetoEnum.novo_produto, status=StatusProjetoEnum.em_andamento, etapa_atual="Formalização", progresso=0.08)
             db.add(p7); db.flush(); criar_etapas(db, p7.id, ["Sinal","Negociação"])
 
             todas = list(ETAPAS_PADRAO)
