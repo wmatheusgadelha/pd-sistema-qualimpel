@@ -59,8 +59,9 @@ async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     try:
+        reset_seed = os.getenv("RESET_SEED", "false").lower() == "true"
         pd_admin_existe = db.query(User).filter(User.email == "admin@pd.com").first()
-        if not pd_admin_existe:
+        if not pd_admin_existe or reset_seed:
             # Usuários
             admin = User(
                 nome="Administrador", email="admin@pd.com",
