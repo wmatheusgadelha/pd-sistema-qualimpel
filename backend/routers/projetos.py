@@ -175,7 +175,7 @@ def atualizar_etapa(
         etapa_nome=etapa.nome,
         status_anterior=etapa.status,
         status_novo=data.status,
-        usuario_id=current_user.id,
+        usuario_id=None,
         observacao=data.observacoes,
     )
     db.add(historico)
