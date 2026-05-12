@@ -1004,6 +1004,14 @@ function doLogout() {
   document.getElementById('loginPage').style.display = 'flex';
 }
 
+// ── Páginas ───────────────────────────────────────────────────────────────────
+const pageTitles = {
+  dashboard: ['Dashboard', 'Visão geral dos projetos P&D'],
+  projetos: ['Projetos', 'Todos os projetos de desenvolvimento'],
+  usuarios: ['Usuários', 'Gerenciar equipe'],
+  conta: ['Minha Conta', 'Configurações pessoais'],
+};
+
 // ── Init App ──────────────────────────────────────────────────────────────────
 function initApp() {
   document.getElementById('loginPage').style.display = 'none';
@@ -1025,13 +1033,6 @@ function initApp() {
 
 if (token && currentUser) initApp();
 
-// ── Páginas ───────────────────────────────────────────────────────────────────
-const pageTitles = {
-  dashboard: ['Dashboard', 'Visão geral dos projetos P&D'],
-  projetos: ['Projetos', 'Todos os projetos de desenvolvimento'],
-  usuarios: ['Usuários', 'Gerenciar equipe'],
-  conta: ['Minha Conta', 'Configurações pessoais'],
-};
 
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
